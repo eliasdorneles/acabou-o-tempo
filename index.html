@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Time's Up! - em português</title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css" />
+    </head>
+    <body>
+        <section class="section">
+            <div class="container">
+                <div class="level">
+                    <div class="box has-text-centered" style="width: 20em">
+                        <div id="start-game-dialog">
+                        <!-- <div id="start&#45;game&#45;dialog" style="display: none"> -->
+                            <p class="title is-size-4">Time's Up! <br> Em Português</p>
+                            <div class="block">
+                                Quantas equipes?
+                                <input id="how-many-teams" class="input is-primary" type="number" min="2" value="2" />
+                            </div>
+                            <div class="block">
+                                <button
+                                    id="start-game"
+                                    class="button is-primary"
+                                    onclick="startGame()"
+                                >
+                                    Começar jogo
+                                </button>
+                            </div>
+                        </div>
+                        <div id="game-box" style="display: none">
+                        <!-- <div id="game&#45;box"> -->
+                            <p>Fase 1</p>
+                            <p id="word-box" class="title my-6">(carregando...)</p>
+                            <p id="timer" class="my-4">(0:40)</p>
+                            <div class="level">
+                                <button class="button is-danger mr-6" onclick="skipWord()">
+                                    Passar
+                                </button>
+                                <button class="button is-primary ml-6" onclick="gotItRight()">
+                                    Acertou!
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <script src="palavras.js"></script>
+        <script src="app.js"></script>
+    </body>
+</html>
