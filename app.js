@@ -1,13 +1,3 @@
-const startGameDialog = document.getElementById("start-game-dialog")
-const gameBox = document.getElementById("game-box")
-const wordBox = document.getElementById("word-box")
-var gameWords = []
-var currentWordIndex = 0
-
-const hide = (el) => (el.style.display = "none")
-
-const show = (el, display = "block") => (el.style.display = display)
-
 const sample = (array, size = 1) => {
   const { floor, random } = Math
   let sampleSet = new Set()
@@ -21,21 +11,130 @@ const sample = (array, size = 1) => {
   return [...sampleSet].map((i) => array[i])
 }
 
-// stub functions, will be replaced by game logic later
-const skipWord = () => {
-  currentWordIndex += 1
-  if (currentWordIndex >= gameWords.length) currentWordIndex = 0
-  wordBox.innerHTML = gameWords[currentWordIndex]
-}
-const gotItRight = skipWord
+class Game {
+  constructor() {
+    this.currentRound = 0
+    this.teams = ["A", "B", "C"]
+    this.amountWords = 30
+    this.words = sample(PALAVRAS, this.amountWords)
 
-// TODO: design the data structure to hold the game state
-// and implement its logic
+    this.currentTeamIndex = 0
+    this.currentWordIndex = 0
+
+    this.endOfRound = false
+    this.endOfGame = false
+
+    this.score = [
+      new Array(30).fill(null), // each position contains "A", or "B" in the position of the word
+      new Array(30).fill(null),
+      new Array(30).fill(null),
+    ]
+
+    this.winnerPerRound = [null, null, null]
+  }
+
+  currentTeam() {
+    return this.teams[this.currentTeamIndex]
+  }
+  currentWord() {
+    return this.words[this.currentWordIndex]
+  }
+
+  calcNextWordIndex() {
+    // Return the index for the next unused word.
+    // If last word in the round, return the same current index
+    // If no more words, return -1
+    let nextIndex = this.score[this.currentRound].findIndex(
+      (x, i) => i > this.currentWordIndex && x === null,
+    )
+    if (nextIndex >= 0) {
+      return nextIndex
+    }
+    return this.score[this.currentRound].findIndex((x) => x === null)
+  }
+
+  handleEndOfRound() {
+    // [ ] if there are no more cards, the round ends and we have to calculate who won
+    // [ ] if the game ends, we have to say who won
+    console.log("round end")
+    this.endOfRound = true
+    if (this.currentRound == 2) {
+      console.log("game over")
+      this.endOfGame = true
+    }
+  }
+
+  startNextRound() {
+    if (this.endOfGame) {
+      console.log("game is finished, gotta start a new one")
+    } else {
+      // TODO: consider not switching if last team had more than 20 seconds on the timer
+      this.switchTeams()
+      this.currentRound += 1
+    }
+  }
+
+  switchTeams() {
+    this.currentTeamIndex =
+      this.currentTeamIndex === this.teams.length - 1 ? 0 : this.currentTeamIndex + 1
+  }
+
+  skipWord() {
+    let nextIndex = this.calcNextWordIndex()
+    if (nextIndex === this.currentWordIndex) {
+      return // last word of the round, don't do anything
+    } else if (nextIndex === -1) {
+      this.handleEndOfRound()
+    } else {
+      this.currentWordIndex = nextIndex
+    }
+  }
+
+  gotItRight() {
+    this.score[this.currentRound][this.currentWordIndex] = this.currentTeam()
+    let nextIndex = this.calcNextWordIndex()
+    if (nextIndex === -1) {
+      this.handleEndOfRound()
+    } else {
+      this.currentWordIndex = nextIndex
+    }
+  }
+}
+
+const startGameDialog = document.getElementById("start-game-dialog")
+const gameBox = document.getElementById("game-box")
+const wordBox = document.getElementById("word-box")
+
+let game = new Game()
+
+const hide = (el) => (el.style.display = "none")
+
+const show = (el, display = "block") => (el.style.display = display)
+
+const updateGameUI = () => {
+  if (game.endOfRound) {
+    if (game.endOfGame) {
+      wordBox.innerHTML = "End of Game"
+    }
+    wordBox.innerHTML = "End of Round"
+  } else {
+    wordBox.innerHTML = game.currentWord()
+  }
+}
+
+const skipWord = () => {
+  game.skipWord()
+  updateGameUI()
+}
+
+const gotItRight = () => {
+  game.gotItRight()
+  updateGameUI()
+}
 
 const startGame = () => {
   console.log("starting game...")
   hide(startGameDialog)
-  gameWords = sample(PALAVRAS, 30)
-  wordBox.innerHTML = gameWords[currentWordIndex]
+  updateGameUI()
   show(gameBox)
 }
