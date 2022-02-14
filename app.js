@@ -14,7 +14,7 @@ const sample = (array, size = 1) => {
 class Game {
   constructor() {
     this.currentRound = 0
-    this.teams = ["A", "B", "C"]
+    this.teams = ["A", "B"]
     this.amountWords = 30
     this.words = sample(PALAVRAS, this.amountWords)
 
@@ -102,17 +102,31 @@ class Game {
 }
 
 const startGameDialog = document.getElementById("start-game-dialog")
+const getReadyDialog = document.getElementById("get-ready")
+const playingBox = document.getElementById("playing")
 const gameBox = document.getElementById("game-box")
-const wordBox = document.getElementById("word-box")
 
 let game = new Game()
+let timer = 0
+let timerId = null
+
+const resetTimer = () => {
+  clearInterval(timerId)
+  timer = 10
+}
+
+resetTimer()
 
 const hide = (el) => (el.style.display = "none")
 
 const show = (el, display = "block") => (el.style.display = display)
 
 const updateGameUI = () => {
+  document.getElementById("timer-seconds").innerHTML = timer
+  document.getElementById("team").innerHTML = game.currentTeam()
+  const wordBox = document.getElementById("word-box")
   if (game.endOfRound) {
+    resetTimer()
     if (game.endOfGame) {
       wordBox.innerHTML = "End of Game"
     }
@@ -120,6 +134,30 @@ const updateGameUI = () => {
   } else {
     wordBox.innerHTML = game.currentWord()
   }
+}
+
+const timerFinished = () => {
+  resetTimer()
+  console.log("timer finished")
+  game.switchTeams()
+  show(getReadyDialog)
+  hide(playingBox)
+}
+
+const updateTimer = () => {
+  if (timer > 0) {
+    timer -= 1
+  } else {
+    timerFinished()
+  }
+  updateGameUI()
+}
+
+const startTimer = () => {
+  timerId = setInterval(updateTimer, 1000)
+  updateGameUI()
+  hide(getReadyDialog)
+  show(playingBox)
 }
 
 const skipWord = () => {

@@ -12,35 +12,53 @@
                 <div class="level">
                     <div class="box has-text-centered" style="width: 20em">
                         <div id="start-game-dialog">
-                        <!-- <div id="start&#45;game&#45;dialog" style="display: none"> -->
-                            <p class="title is-size-4">Time's Up! <br> Em Português</p>
-                            <div class="block">
-                                Quantas equipes?
-                                <input id="how-many-teams" class="input is-primary" type="number" min="2" value="2" />
-                            </div>
+                            <!-- <div id="start&#45;game&#45;dialog" style="display: none"> -->
+                            <p class="title is-size-4">
+                                Time's Up! <br />
+                                Em Português
+                            </p>
+                            <!-- <div class="block"> -->
+                            <!--     Quantas equipes? -->
+                            <!--     <input -->
+                            <!--         id="how&#45;many&#45;teams" -->
+                            <!--         class="input is&#45;primary" -->
+                            <!--         type="number" -->
+                            <!--         min="2" -->
+                            <!--         value="2" -->
+                            <!--     /> -->
+                            <!-- </div> -->
                             <div class="block">
                                 <button
                                     id="start-game"
                                     class="button is-primary"
                                     onclick="startGame()"
                                 >
-                                    Começar jogo
+                                    Novo jogo
                                 </button>
                             </div>
                         </div>
                         <div id="game-box" style="display: none">
-                        <!-- <div id="game&#45;box"> -->
+                            <!-- <div id="game&#45;box"> -->
                             <p>Fase 1</p>
-                            <!-- TODO: Display which team is playing -->
-                            <p id="word-box" class="title my-6">(carregando...)</p>
-                            <p id="timer" class="my-4">(0:40)</p>
-                            <div class="level">
-                                <button class="button is-danger mr-6" onclick="skipWord()">
-                                    Passar
+                            <p>Equipe <span id="team">(carregando...)</span></p>
+                            <div id="get-ready">
+                                <p>Prontos?</p>
+
+                                <button class="button is-primary" onclick="startTimer()">
+                                    Começar
                                 </button>
-                                <button class="button is-primary ml-6" onclick="gotItRight()">
-                                    Acertou!
-                                </button>
+                            </div>
+                            <div id="playing" style="display: none">
+                                <p id="word-box" class="title my-6">(carregando...)</p>
+                                <p id="timer" class="my-4">(0:<span id="timer-seconds"></span>)</p>
+                                <div class="level">
+                                    <button class="button is-danger mr-6" onclick="skipWord()">
+                                        Passar
+                                    </button>
+                                    <button class="button is-primary ml-6" onclick="gotItRight()">
+                                        Acertou!
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
