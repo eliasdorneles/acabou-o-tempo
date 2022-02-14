@@ -92,7 +92,7 @@ Ramalhete
 Fones de ouvido
 Fogos de artifício
 Iglu
-roda gigante
+Roda gigante
 Casca de banana
 Cortador de grama
 Verão
@@ -101,7 +101,7 @@ Bolinho
 Saco de dormir
 Hematoma
 Névoa
-crosta
+Crosta
 Bateria
 Paris
 Praia
