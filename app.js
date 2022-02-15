@@ -70,6 +70,7 @@ class Game {
     } else {
       // TODO: consider not switching if last team had more than 20 seconds on the timer
       this.switchTeams()
+      this.endOfRound = false
       this.currentRound += 1
     }
   }
@@ -123,14 +124,22 @@ const show = (el, display = "block") => (el.style.display = display)
 
 const updateGameUI = () => {
   document.getElementById("timer-seconds").innerHTML = timer
+  // TODO: make more visible the changement of round
+  document.getElementById("round").innerHTML = game.currentRound + 1
+  // TODO: make more visible the changement of team
   document.getElementById("team").innerHTML = game.currentTeam()
   const wordBox = document.getElementById("word-box")
   if (game.endOfRound) {
     resetTimer()
     if (game.endOfGame) {
       wordBox.innerHTML = "End of Game"
+    } else {
+      wordBox.innerHTML = "(end of round)"
+      game.startNextRound()
+      updateGameUI()
+      show(getReadyDialog)
+      hide(playingBox)
     }
-    wordBox.innerHTML = "End of Round"
   } else {
     wordBox.innerHTML = game.currentWord()
   }
