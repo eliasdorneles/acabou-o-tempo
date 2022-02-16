@@ -39,6 +39,9 @@ class Game {
   currentWord() {
     return this.words[this.currentWordIndex]
   }
+  currentRoundWinner() {
+    return this.winnerPerRound[this.currentRound]
+  }
 
   calcNextWordIndex() {
     // Return the index for the next unused word.
@@ -53,13 +56,25 @@ class Game {
     return this.score[this.currentRound].findIndex((x) => x === null)
   }
 
+  updateWinners() {
+    // count points for each team
+    const pointsPerTeam = this.teams.map(
+      (t) => this.score[this.currentRound].filter((x) => x == t).length,
+    )
+    // identify the winner
+    let winnerIndex = 0
+    pointsPerTeam.forEach((p, i) => {
+      if (p > pointsPerTeam[winnerIndex]) winnerIndex = i
+    })
+    this.winnerPerRound[this.currentRound] = this.teams[winnerIndex]
+  }
+
   handleEndOfRound() {
-    // [ ] if there are no more cards, the round ends and we have to calculate who won
-    // [ ] if the game ends, we have to say who won
-    console.log("round end")
+    console.log("end of round")
     this.endOfRound = true
+    this.updateWinners()
     if (this.currentRound == 2) {
-      console.log("game over")
+      console.log("end of game")
       this.endOfGame = true
     }
   }
@@ -113,7 +128,7 @@ let timerId = null
 const resetTimer = () => {
   clearInterval(timerId)
   timer = 40
-  // timer = 10  // uncomment while developing
+  timer = 10 // uncomment while developing
 }
 
 resetTimer()
@@ -122,8 +137,7 @@ const hide = (el) => (el.style.display = "none")
 
 const show = (el, display = "block") => (el.style.display = display)
 
-const updateNotif = (text) =>
-  document.getElementById("notif").innerHTML = text
+const updateNotif = (text) => (document.getElementById("notif").innerHTML = text)
 
 const updateGameUI = () => {
   document.getElementById("timer-seconds").innerHTML = timer
@@ -135,11 +149,24 @@ const updateGameUI = () => {
   if (game.endOfRound) {
     resetTimer()
     if (game.endOfGame) {
-      updateNotif("Fim do jogo!")
+      updateNotif(
+        "Fim da fase " +
+          (game.currentRound + 1) +
+          "<br>Equipe " +
+          game.currentRoundWinner() +
+          " venceu!" +
+          "<br>Fim do jogo!",
+      )
       show(timesUpDialog)
       hide(playingBox)
     } else {
-      updateNotif("Fim do round " + (game.currentRound + 1))
+      updateNotif(
+        "Fim da fase " +
+          (game.currentRound + 1) +
+          "<br>Equipe " +
+          game.currentRoundWinner() +
+          " venceu!",
+      )
       show(timesUpDialog)
       hide(playingBox)
     }
@@ -157,7 +184,7 @@ const timerFinished = () => {
 
 const nextToPlay = () => {
   if (game.endOfRound && !game.endOfGame) {
-      game.startNextRound()
+    game.startNextRound()
   }
   // TODO: consider not switching if round switch and last team had less than 20 seconds to work
   game.switchTeams()
