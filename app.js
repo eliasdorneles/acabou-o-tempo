@@ -68,8 +68,6 @@ class Game {
     if (this.endOfGame) {
       console.log("game is finished, gotta start a new one")
     } else {
-      // TODO: consider not switching if last team had more than 20 seconds on the timer
-      this.switchTeams()
       this.endOfRound = false
       this.currentRound += 1
     }
@@ -137,11 +135,11 @@ const updateGameUI = () => {
   if (game.endOfRound) {
     resetTimer()
     if (game.endOfGame) {
-      wordBox.innerHTML = "End of Game"
+      updateNotif("Fim do jogo!")
+      show(timesUpDialog)
+      hide(playingBox)
     } else {
       updateNotif("Fim do round " + (game.currentRound + 1))
-      game.startNextRound()
-      updateGameUI()
       show(timesUpDialog)
       hide(playingBox)
     }
@@ -155,10 +153,14 @@ const timerFinished = () => {
   console.log("timer finished")
   show(timesUpDialog)
   hide(playingBox)
-  game.switchTeams()
 }
 
 const nextToPlay = () => {
+  if (game.endOfRound && !game.endOfGame) {
+      game.startNextRound()
+  }
+  // TODO: consider not switching if round switch and last team had less than 20 seconds to work
+  game.switchTeams()
   updateGameUI()
   hide(timesUpDialog)
   show(getReadyDialog)
@@ -177,6 +179,7 @@ const startTimer = () => {
   updateNotif("Acabou o Tempo!")
   timerId = setInterval(updateTimer, 1000)
   updateGameUI()
+  hide(timesUpDialog)
   hide(getReadyDialog)
   show(playingBox)
 }
