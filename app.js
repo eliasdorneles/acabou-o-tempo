@@ -104,6 +104,7 @@ class Game {
 
 const startGameDialog = document.getElementById("start-game-dialog")
 const getReadyDialog = document.getElementById("get-ready")
+const timesUpDialog = document.getElementById("times-up")
 const playingBox = document.getElementById("playing")
 const gameBox = document.getElementById("game-box")
 
@@ -113,7 +114,8 @@ let timerId = null
 
 const resetTimer = () => {
   clearInterval(timerId)
-  timer = 10
+  timer = 40
+  // timer = 10  // uncomment while developing
 }
 
 resetTimer()
@@ -121,6 +123,9 @@ resetTimer()
 const hide = (el) => (el.style.display = "none")
 
 const show = (el, display = "block") => (el.style.display = display)
+
+const updateNotif = (text) =>
+  document.getElementById("notif").innerHTML = text
 
 const updateGameUI = () => {
   document.getElementById("timer-seconds").innerHTML = timer
@@ -134,10 +139,10 @@ const updateGameUI = () => {
     if (game.endOfGame) {
       wordBox.innerHTML = "End of Game"
     } else {
-      wordBox.innerHTML = "(end of round)"
+      updateNotif("Fim do round " + (game.currentRound + 1))
       game.startNextRound()
       updateGameUI()
-      show(getReadyDialog)
+      show(timesUpDialog)
       hide(playingBox)
     }
   } else {
@@ -148,9 +153,15 @@ const updateGameUI = () => {
 const timerFinished = () => {
   resetTimer()
   console.log("timer finished")
-  game.switchTeams()
-  show(getReadyDialog)
+  show(timesUpDialog)
   hide(playingBox)
+  game.switchTeams()
+}
+
+const nextToPlay = () => {
+  updateGameUI()
+  hide(timesUpDialog)
+  show(getReadyDialog)
 }
 
 const updateTimer = () => {
@@ -163,6 +174,7 @@ const updateTimer = () => {
 }
 
 const startTimer = () => {
+  updateNotif("Acabou o Tempo!")
   timerId = setInterval(updateTimer, 1000)
   updateGameUI()
   hide(getReadyDialog)
@@ -185,3 +197,5 @@ const startGame = () => {
   updateGameUI()
   show(gameBox)
 }
+
+// startGame()
