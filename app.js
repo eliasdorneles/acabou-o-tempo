@@ -128,7 +128,6 @@ let timerId = null
 const resetTimer = () => {
   clearInterval(timerId)
   timer = 40
-  timer = 10 // uncomment while developing
 }
 
 resetTimer()
@@ -228,4 +227,3 @@ const startGame = () => {
   show(gameBox)
 }
 
-// startGame()
