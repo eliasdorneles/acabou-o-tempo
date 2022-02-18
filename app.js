@@ -179,6 +179,7 @@ const timerFinished = () => {
   console.log("timer finished")
   show(timesUpDialog)
   hide(playingBox)
+  game.skipWord()
 }
 
 const nextToPlay = () => {
