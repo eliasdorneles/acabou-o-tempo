@@ -128,7 +128,7 @@ let timerId = null
 const resetTimer = () => {
   clearInterval(timerId)
   timer = 40
-  timer = 5
+  //timer = 5
 }
 
 resetTimer()
