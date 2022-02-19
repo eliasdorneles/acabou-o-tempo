@@ -17,16 +17,18 @@
                                 Time's Up! <br />
                                 Em Português
                             </p>
-                            <!-- <div class="block"> -->
-                            <!--     Quantas equipes? -->
-                            <!--     <input -->
-                            <!--         id="how&#45;many&#45;teams" -->
-                            <!--         class="input is&#45;primary" -->
-                            <!--         type="number" -->
-                            <!--         min="2" -->
-                            <!--         value="2" -->
-                            <!--     /> -->
-                            <!-- </div> -->
+                            <div class="block">
+                                <label class="label" for="how-many-teams">Quantas equipes?</label>
+                                <div class="select">
+                                    <select id="how-many-teams">
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                        <option value="6">6</option>
+                                    </select>
+                                </div>
+                            </div>
                             <div class="block">
                                 <button
                                     id="start-game"
@@ -40,7 +42,9 @@
                         <div id="game-box" style="display: none">
                             <!-- <div id="game&#45;box"> -->
                             <p class="title is-3 is-primary">Fase <span id="round"></span></p>
-                            <p class="subtitle is-3">Equipe <span id="team">(carregando...)</span></p>
+                            <p class="subtitle is-3">
+                                Equipe <span id="team">(carregando...)</span>
+                            </p>
                             <div id="times-up" style="display: none">
                                 <p id="notif" class="subtitle is-4">...</p>
 

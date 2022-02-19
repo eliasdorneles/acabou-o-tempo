@@ -12,9 +12,9 @@ const sample = (array, size = 1) => {
 }
 
 class Game {
-  constructor() {
+  constructor(howManyTeams) {
     this.currentRound = 0
-    this.teams = ["A", "B"]
+    this.teams = ["A", "B", "C", "D", "E", "F"].splice(0, howManyTeams)
     this.amountWords = 30
     this.words = sample(PALAVRAS, this.amountWords)
 
@@ -128,6 +128,7 @@ let timerId = null
 const resetTimer = () => {
   clearInterval(timerId)
   timer = 40
+  timer = 5
 }
 
 resetTimer()
@@ -223,8 +224,9 @@ const gotItRight = () => {
 
 const startGame = () => {
   console.log("starting game...")
+  const howMany = document.getElementById("how-many-teams").value
+  game = new Game(howMany)
   hide(startGameDialog)
   updateGameUI()
   show(gameBox)
 }
-
