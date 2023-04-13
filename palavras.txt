@@ -9,6 +9,7 @@ Escova de dentes
 Lápis
 Livro
 Astronauta
+Bola
 Amor
 Ódio
 Cego
@@ -306,8 +307,238 @@ Geléia
 Gelatina
 Funil
 Lixeira
+Pente
 Baqueta
 Capacete
 Cinto de segurança
 Medalha
 Máscara
+Corda
+Pipa
+Pirulito
+Pistola
+Penteado
+Leopardo
+Cavalo-marinho
+Cachorro-quente
+Sanduíche
+Ponte
+Brigadeiro
+Bolo
+Biscoito
+Bolacha
+Café
+Cafeteira
+Marciano
+Rede
+Bússola
+Bolha de sabão
+Onça pintada
+Pinguim
+John Lennon
+Torre Eiffel
+Cavalo de Troia
+Garrafa
+Copo
+Xícara
+Colher
+Garfo
+Faca
+Pote
+Pires
+Pia
+Concha
+Pizza
+Pão de queijo
+Farinha
+Cebola
+Alface
+Pimenta
+Cogumelo
+Cenoura
+Pimentão
+Batata
+Batata doce
+Abacate
+Abacaxi
+Ameixa
+Caju
+Coco
+Cereja
+Figo
+Goiaba
+Kiwi
+Laranja
+Maçã
+Mamão
+Melancia
+Melão
+Pera
+Sal
+Torneira
+Tábua de passar roupa
+Pombo
+Pirâmide
+Enfermeiro
+Guarda-chuva
+Batata frita
+Trenó
+Tigela
+Chapéu
+Baleia
+Bússola
+Rei
+Fada
+Flauta
+Máscara
+Banda
+Luminária
+Gorila
+Gelo
+Pincípe
+Geleira
+Eletricista
+Lobisomem
+Ninja
+Papagaio
+Roupão
+Açougueiro
+Alojamento
+Anzol
+Armadilha
+Biblioteca
+Botão
+Cérebro
+Cortina
+Cozinheiro
+Diamante
+Escritório
+Escova de cabelo
+Fantasia
+Foca
+Gaiola
+Garrafa
+Grama
+Gravata
+Lancheira
+Língua
+Mala
+Mamadeira
+Melancia
+Melão
+Mochila
+Morcego
+Ouro
+Palhaço
+Pasta
+Pijama
+Pimenta
+Polvo
+Quebra-cabeça
+Relâmpago
+Salsicha
+Serra elétrica
+Sinal
+Surfista
+Tangerina
+Trombone
+Trompete
+Trufa
+Urso
+Vampiro
+Vara de pescar
+Vinho
+Xícara
+Astrólogo
+Balde
+Barril
+Bebida quente
+Boia
+Bumerangue
+Carruagem
+Catapulta
+Cavalete
+Céu
+Chave
+Chave de fenda
+Cordão
+Cruz
+Desenho animado
+Dinossauro
+Escada rolante
+Escudo
+Estetoscópio
+Ferro de passar roupa
+Folha
+Gelo seco
+Girassol
+Grafite
+Guindaste
+Inseto
+Interruptor
+Joia
+Lampião
+Lã
+Leite condensado
+Luminária de rua
+Luzes de Natal
+Mangueira
+Marionete
+Megafone
+Mel
+Microscópio
+Mimo
+Moedor de café
+Mola
+Mosaico
+Muleta
+Ninho
+Nuvem
+Omelete
+Ovo
+Óxido
+Painel solar
+Palheta
+Papai Noel
+Paraquedas
+Pato
+Pedra
+Pedra preciosa
+Pente
+Piano
+Pino
+Pinça
+Ponte
+Porta
+Prateleira
+Raio
+Ratoeira
+Refrigerante
+Régua
+Roda
+Roupa
+Saco
+Sanduíche
+Sapato
+Segredo
+Sino
+Sofá
+Sombra
+Sombrinha
+Supermercado
+Tambor
+Tecido
+Telefone
+Tênis de mesa
+Termômetro
+Tinta
+Tocha
+Touca
+Trampolim
+Tronco
+Tubo de ensaio
+Túnel
+Unicórnio
+Vassoura
+Vestido
+Vidro
