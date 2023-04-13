@@ -1,4 +1,5 @@
 const sample = (array, size = 1) => {
+  // Return a random sample of the given array of size `size`
   const { floor, random } = Math
   let sampleSet = new Set()
   for (let i = 0; i < size; i++) {
@@ -15,8 +16,8 @@ class Game {
   constructor(howManyTeams) {
     this.currentRound = 0
     this.teams = ["A", "B", "C", "D", "E", "F"].splice(0, howManyTeams)
-    this.amountWords = 30
-    this.words = sample(PALAVRAS, this.amountWords)
+    const amountWords = 10 + howManyTeams * 10
+    this.words = sample(PALAVRAS, amountWords)
 
     this.currentTeamIndex = 0
     this.currentWordIndex = 0
@@ -25,9 +26,9 @@ class Game {
     this.endOfGame = false
 
     this.score = [
-      new Array(30).fill(null), // each position contains "A", or "B" in the position of the word
-      new Array(30).fill(null),
-      new Array(30).fill(null),
+      new Array(amountWords).fill(null), // each position contains the team name (e.g. "A", "B", ...) in the position of the word
+      new Array(amountWords).fill(null),
+      new Array(amountWords).fill(null),
     ]
 
     this.winnerPerRound = [null, null, null]
@@ -56,11 +57,12 @@ class Game {
     return this.score[this.currentRound].findIndex((x) => x === null)
   }
 
-  updateWinners() {
-    // count points for each team
-    const pointsPerTeam = this.teams.map(
-      (t) => this.score[this.currentRound].filter((x) => x == t).length,
-    )
+  countPointsPerTeam() {
+    return this.teams.map((t) => this.score[this.currentRound].filter((x) => x == t).length)
+  }
+
+  updateWinnersForCurrentRound() {
+    const pointsPerTeam = this.countPointsPerTeam()
     // identify the winner
     let winnerIndex = 0
     pointsPerTeam.forEach((p, i) => {
@@ -72,7 +74,7 @@ class Game {
   handleEndOfRound() {
     console.log("end of round")
     this.endOfRound = true
-    this.updateWinners()
+    this.updateWinnersForCurrentRound()
     if (this.currentRound == 2) {
       console.log("end of game")
       this.endOfGame = true
@@ -91,6 +93,11 @@ class Game {
   switchTeams() {
     this.currentTeamIndex =
       this.currentTeamIndex === this.teams.length - 1 ? 0 : this.currentTeamIndex + 1
+  }
+
+  lastWordOfRound() {
+    // return true if the current word is the last word of the round
+    return this.calcNextWordIndex() === this.currentWordIndex
   }
 
   skipWord() {
@@ -121,14 +128,14 @@ const timesUpDialog = document.getElementById("times-up")
 const playingBox = document.getElementById("playing")
 const gameBox = document.getElementById("game-box")
 
-let game = new Game()
+let game = undefined
 let timer = 0
 let timerId = null
 
 const resetTimer = () => {
   clearInterval(timerId)
   timer = 40
-  //timer = 5
+  // timer = 5 // uncomment for testing
 }
 
 resetTimer()
@@ -139,39 +146,43 @@ const show = (el, display = "block") => (el.style.display = display)
 
 const updateNotif = (text) => (document.getElementById("notif").innerHTML = text)
 
+const roundName = (round) => {
+  switch (round) {
+    case 0:
+      return "1ª fase: descrição livre"
+    case 1:
+      return "2ª fase: uma palavra só"
+    case 2:
+      return "3ª fase: mímica"
+    default:
+      return "Fase desconhecida"
+  }
+}
+
 const updateGameUI = () => {
   document.getElementById("timer-seconds").innerHTML = timer
   // TODO: make more visible the changement of round
-  document.getElementById("round").innerHTML = game.currentRound + 1
+  document.getElementById("round").innerHTML = roundName(game.currentRound)
   // TODO: make more visible the changement of team
   document.getElementById("team").innerHTML = game.currentTeam()
   const wordBox = document.getElementById("word-box")
   if (game.endOfRound) {
     resetTimer()
+    let message = `<p>Fim da ${roundName(game.currentRound)}</p>
+      <p class="title is-3">Equipe ${game.currentRoundWinner()} venceu! 👏</p>`
     if (game.endOfGame) {
-      updateNotif(
-        "Fim da fase " +
-          (game.currentRound + 1) +
-          "<br>Equipe " +
-          game.currentRoundWinner() +
-          " venceu!" +
-          "<br>Fim do jogo!",
-      )
-      show(timesUpDialog)
-      hide(playingBox)
-    } else {
-      updateNotif(
-        "Fim da fase " +
-          (game.currentRound + 1) +
-          "<br>Equipe " +
-          game.currentRoundWinner() +
-          " venceu!",
-      )
-      show(timesUpDialog)
-      hide(playingBox)
+      message += "<p>Fim do jogo!</p>"
     }
+    updateNotif(message)
+    show(timesUpDialog)
+    hide(playingBox)
   } else {
-    wordBox.innerHTML = game.currentWord()
+    wordBox.innerHTML = `
+      <p>${game.currentWord()}</p>
+      <p class="is-size-6 has-text-grey mt-2">${
+        game.lastWordOfRound() ? "Última palavra da fase atual" : "&nbsp;"
+      }</p>
+      `
   }
 }
 
@@ -204,7 +215,9 @@ const updateTimer = () => {
 }
 
 const startTimer = () => {
-  updateNotif("Acabou o Tempo!")
+  updateNotif(
+    '<p>Acabou o tempo!</p><p class="is-size-6">Clique em continuar e passe para a próxima equipe</p>',
+  )
   timerId = setInterval(updateTimer, 1000)
   updateGameUI()
   hide(timesUpDialog)
@@ -224,7 +237,7 @@ const gotItRight = () => {
 
 const startGame = () => {
   console.log("starting game...")
-  const howMany = document.getElementById("how-many-teams").value
+  const howMany = document.querySelector('input[name="how-many-teams"]:checked').value
   game = new Game(howMany)
   hide(startGameDialog)
   updateGameUI()

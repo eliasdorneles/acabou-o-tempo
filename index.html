@@ -1,82 +1,77 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>Time's Up! - em português</title>
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css" />
-    </head>
-    <body>
-        <section class="section">
-            <div class="container">
-                <div class="level">
-                    <div class="box has-text-centered" style="width: 20em">
-                        <div id="start-game-dialog">
-                            <!-- <div id="start&#45;game&#45;dialog" style="display: none"> -->
-                            <p class="title is-size-4">
-                                Time's Up! <br />
-                                Em Português
-                            </p>
-                            <div class="block">
-                                <label class="label" for="how-many-teams">Quantas equipes?</label>
-                                <div class="select">
-                                    <select id="how-many-teams">
-                                        <option value="2">2</option>
-                                        <option value="3">3</option>
-                                        <option value="4">4</option>
-                                        <option value="5">5</option>
-                                        <option value="6">6</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="block">
-                                <button
-                                    id="start-game"
-                                    class="button is-primary"
-                                    onclick="startGame()"
-                                >
-                                    Novo jogo
-                                </button>
-                            </div>
-                        </div>
-                        <div id="game-box" style="display: none">
-                            <!-- <div id="game&#45;box"> -->
-                            <p class="title is-3 is-primary">Fase <span id="round"></span></p>
-                            <p class="subtitle is-3">
-                                Equipe <span id="team">(carregando...)</span>
-                            </p>
-                            <div id="times-up" style="display: none">
-                                <p id="notif" class="subtitle is-4">...</p>
-
-                                <button class="button is-primary" onclick="nextToPlay()">
-                                    Continuar
-                                </button>
-                            </div>
-                            <div id="get-ready">
-                                <p class="subtitle is-4">Todo mundo pronto?</p>
-
-                                <button class="button is-primary" onclick="startTimer()">
-                                    Começar
-                                </button>
-                            </div>
-                            <div id="playing" style="display: none">
-                                <p id="word-box" class="title my-6">(carregando...)</p>
-                                <p id="timer" class="my-4">(0:<span id="timer-seconds"></span>)</p>
-                                <div class="level">
-                                    <button class="button is-danger mr-6" onclick="skipWord()">
-                                        Passar
-                                    </button>
-                                    <button class="button is-primary ml-6" onclick="gotItRight()">
-                                        Acertou!
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Time's Up! - em português</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css" />
+  </head>
+  <body>
+    <section class="section">
+      <div class="container">
+        <div class="level">
+          <div class="box has-text-centered" style="width: 20em">
+            <div id="start-game-dialog">
+              <!-- <div id="start&#45;game&#45;dialog" style="display: none"> -->
+              <p class="title is-size-4">
+                <span class="is-italic">« Time's Up! »</span>
+                em Português <span class="has-text-primary">🇧🇷</span>
+              </p>
+              <div class="block">
+                <label class="label" for="how-many-teams">Quantas equipes?</label>
+                <div class="control">
+                  <label class="radio">
+                    <input type="radio" name="how-many-teams" value="2" checked required />
+                    2
+                  </label>
+                  <label class="radio">
+                    <input type="radio" name="how-many-teams" value="3" />
+                    3
+                  </label>
+                  <label class="radio">
+                    <input type="radio" name="how-many-teams" value="4" />
+                    4
+                  </label>
+                  <label class="radio">
+                    <input type="radio" name="how-many-teams" value="5" />
+                    5
+                  </label>
                 </div>
+              </div>
+              <div class="block">
+                <button id="start-game" class="button is-primary" onclick="startGame()">
+                  Começar partida
+                </button>
+              </div>
             </div>
-        </section>
-        <script src="palavras.js"></script>
-        <script src="app.js"></script>
-    </body>
+            <div id="game-box" style="display: none">
+              <!-- <div id="game&#45;box"> -->
+              <p class="title is-4 is-primary"><span id="round"></span></p>
+              <p class="subtitle is-3">Equipe <span id="team">(carregando...)</span></p>
+              <div id="times-up" style="display: none">
+                <div id="notif" class="subtitle is-4">...</div>
+
+                <button class="button is-primary" onclick="nextToPlay()">Continuar</button>
+              </div>
+              <div id="get-ready">
+                <p class="subtitle is-6">Clique em começar quando estiver pronto</p>
+
+                <button class="button is-primary" onclick="startTimer()">Começar</button>
+              </div>
+              <div id="playing" style="display: none">
+                <p id="word-box" class="title my-6">(carregando...)</p>
+                <p id="timer" class="title is-4">(0:<span id="timer-seconds"></span>)</p>
+                <div class="level buttons are-large">
+                  <button class="button is-danger" onclick="skipWord()">Passar</button>
+                  <button class="button is-primary" onclick="gotItRight()">Acertou!</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <script src="palavras.js"></script>
+    <script src="app.js"></script>
+  </body>
 </html>
