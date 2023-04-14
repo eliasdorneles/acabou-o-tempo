@@ -168,14 +168,14 @@ const show = (el, display = "block") => (el.style.display = display)
 
 const updateNotif = (text) => (document.getElementById("notif").innerHTML = text)
 
-const roundName = (round) => {
+const roundName = (round, short = false) => {
   switch (round) {
     case 0:
-      return "1ª fase: descrição livre"
+      return `1ª fase${short ? "" : ": descrição livre"}`
     case 1:
-      return "2ª fase: uma palavra só"
+      return `2ª fase${short ? "" : ": uma palavra só"}`
     case 2:
-      return "3ª fase: mímica"
+      return `3ª fase${short ? "" : ": mímica"}`
     default:
       return "Fase desconhecida"
   }
@@ -196,12 +196,17 @@ const generateHtmlTableOfTeamsAndScoresForCurrentRound = (game) => {
 
 const updateGameUI = () => {
   document.getElementById("timer-seconds").innerHTML = timer
+  if (timer < 10) {
+    document.getElementById("timer").classList.add("has-text-danger")
+  } else {
+    document.getElementById("timer").classList.remove("has-text-danger")
+  }
   document.getElementById("round").innerHTML = roundName(game.currentRound)
   document.getElementById("current-team").innerHTML = game.currentTeam()
   const wordBox = document.getElementById("word-box")
   if (game.endOfRound) {
     resetTimer()
-    let message = `<p>Fim da ${roundName(game.currentRound)}</p>
+    let message = `<p>Fim da ${roundName(game.currentRound, (short = true))}</p>
       <p class="title is-3">Equipe ${game.currentRoundWinner()} venceu! 👏</p>
       ${generateHtmlTableOfTeamsAndScoresForCurrentRound(game)}
       `
