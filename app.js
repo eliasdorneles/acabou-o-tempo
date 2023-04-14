@@ -32,6 +32,7 @@ class Game {
     ]
 
     this.winnerPerRound = [null, null, null]
+    this.roundScores = [[], [], []]
   }
 
   currentTeam() {
@@ -41,7 +42,7 @@ class Game {
     return this.words[this.currentWordIndex]
   }
   currentRoundWinner() {
-    return this.winnerPerRound[this.currentRound]
+    return this.winnerPerRound[this.currentRound]["team"]
   }
 
   calcNextWordIndex() {
@@ -57,24 +58,40 @@ class Game {
     return this.score[this.currentRound].findIndex((x) => x === null)
   }
 
-  countPointsPerTeam() {
-    return this.teams.map((t) => this.score[this.currentRound].filter((x) => x == t).length)
+  countPointsPerTeam = (round) => {
+    return this.teams.map((t) => this.score[round].filter((x) => x == t).length)
   }
 
-  updateWinnersForCurrentRound() {
-    const pointsPerTeam = this.countPointsPerTeam()
-    // identify the winner
-    let winnerIndex = 0
-    pointsPerTeam.forEach((p, i) => {
-      if (p > pointsPerTeam[winnerIndex]) winnerIndex = i
+  scorePointsForAllTeams() {
+    // Return an array of objects with the team name and the points for each round
+    // e.g. [
+    //   [{team: "A", points: 3}, {team: "B", points: 2}, ...], // round 1
+    //   [{team: "A", points: 2}, {team: "B", points: 3}, ...], // round 2
+    //   [{team: "A", points: 1}, {team: "B", points: 4}, ...], // round 3
+    // ]
+    return this.score.map((_, i) => {
+      const pointsPerTeam = this.countPointsPerTeam(i)
+      return this.teams.map((t, j) => {
+        return { team: t, points: pointsPerTeam[j] }
+      })
     })
-    this.winnerPerRound[this.currentRound] = this.teams[winnerIndex]
+  }
+
+  updateScores() {
+    this.roundScores = this.scorePointsForAllTeams()
+    this.winnerPerRound = this.roundScores.map((round) => {
+      let winnerIndex = 0
+      round.forEach((p, i) => {
+        if (p.points > round[winnerIndex].points) winnerIndex = i
+      })
+      return round[winnerIndex]
+    })
   }
 
   handleEndOfRound() {
     console.log("end of round")
     this.endOfRound = true
-    this.updateWinnersForCurrentRound()
+    this.updateScores()
     if (this.currentRound == 2) {
       console.log("end of game")
       this.endOfGame = true
@@ -98,6 +115,10 @@ class Game {
   lastWordOfRound() {
     // return true if the current word is the last word of the round
     return this.calcNextWordIndex() === this.currentWordIndex
+  }
+
+  countRemainingWordsinTheRound() {
+    return this.score[this.currentRound].filter((x) => x === null).length
   }
 
   skipWord() {
@@ -127,6 +148,7 @@ const getReadyDialog = document.getElementById("get-ready")
 const timesUpDialog = document.getElementById("times-up")
 const playingBox = document.getElementById("playing")
 const gameBox = document.getElementById("game-box")
+const currentTeamBox = document.getElementById("team-box")
 
 let game = undefined
 let timer = 0
@@ -159,28 +181,44 @@ const roundName = (round) => {
   }
 }
 
+const generateHtmlTableOfTeamsAndScoresForCurrentRound = (game) => {
+  const roundScores = game.roundScores[game.currentRound]
+  let html = "<table class='table is-size-6 mx-6'>"
+  html += "<thead><tr><th colspan='2'>Placar</th></tr></thead>"
+  html += "<tbody>"
+  roundScores.forEach((s) => {
+    html += `<tr><td>Equipe ${s.team}</td><td>${s.points}</td></tr>`
+  })
+  html += "</tbody>"
+  html += "</table>"
+  return html
+}
+
 const updateGameUI = () => {
   document.getElementById("timer-seconds").innerHTML = timer
-  // TODO: make more visible the changement of round
   document.getElementById("round").innerHTML = roundName(game.currentRound)
-  // TODO: make more visible the changement of team
-  document.getElementById("team").innerHTML = game.currentTeam()
+  document.getElementById("current-team").innerHTML = game.currentTeam()
   const wordBox = document.getElementById("word-box")
   if (game.endOfRound) {
     resetTimer()
     let message = `<p>Fim da ${roundName(game.currentRound)}</p>
-      <p class="title is-3">Equipe ${game.currentRoundWinner()} venceu! 👏</p>`
+      <p class="title is-3">Equipe ${game.currentRoundWinner()} venceu! 👏</p>
+      ${generateHtmlTableOfTeamsAndScoresForCurrentRound(game)}
+      `
     if (game.endOfGame) {
       message += "<p>Fim do jogo!</p>"
     }
     updateNotif(message)
     show(timesUpDialog)
     hide(playingBox)
+    hide(currentTeamBox)
   } else {
     wordBox.innerHTML = `
       <p>${game.currentWord()}</p>
       <p class="is-size-6 has-text-grey mt-2">${
-        game.lastWordOfRound() ? "Última palavra da fase atual" : "&nbsp;"
+        game.lastWordOfRound()
+          ? "Última palavra da fase atual"
+          : `Palavras restantes: ${game.countRemainingWordsinTheRound()}`
       }</p>
       `
   }
@@ -197,6 +235,7 @@ const timerFinished = () => {
 const nextToPlay = () => {
   if (game.endOfRound && !game.endOfGame) {
     game.startNextRound()
+    show(currentTeamBox)
   }
   // TODO: consider not switching if round switch and last team had less than 20 seconds to work
   game.switchTeams()
