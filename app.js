@@ -205,7 +205,6 @@ const updateGameUI = () => {
   document.getElementById("current-team").innerHTML = game.currentTeam()
   const wordBox = document.getElementById("word-box")
   if (game.endOfRound) {
-    resetTimer()
     let message = `<p>Fim da ${roundName(game.currentRound, (short = true))}</p>
       <p class="title is-3">Equipe ${game.currentRoundWinner()} venceu! 👏</p>
       ${generateHtmlTableOfTeamsAndScoresForCurrentRound(game)}
@@ -238,6 +237,9 @@ const timerFinished = () => {
 }
 
 const nextToPlay = () => {
+  if (game.endOfRound) {
+    resetTimer()
+  }
   if (game.endOfRound && !game.endOfGame) {
     game.startNextRound()
     show(currentTeamBox)
