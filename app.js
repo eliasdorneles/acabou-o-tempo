@@ -28,7 +28,7 @@ const TRANSLATIONS = {
     "how-many-teams": "How many teams?",
     continue: "Continue",
     pass: "Pass",
-    "got-it-right": "Got it right!",
+    "got-it-right": "Got it!",
     start: "Start",
     "start-game": "Start game",
     "click-start-when-ready": "Click start when ready",
@@ -45,6 +45,30 @@ const TRANSLATIONS = {
     round_end_of: "End of",
     "remaining-words": "Remaining words",
     winner: "Winner",
+    scores: "Scores",
+  },
+  "fr": {
+    team: "Équipe",
+    "how-many-teams": "Combien d'équipes ?",
+    continue: "Continuer",
+    pass: "Passer",
+    "got-it-right": "C'est ça!",
+    start: "Commencer",
+    "start-game": "Commencer le jeu",
+    "click-start-when-ready": "Cliquez sur commencer quand vous êtes prêt",
+    "last-word-of-round": "Dernier mot de la manche",
+    "time-is-up": "« Time is up ! »",
+    "click-start-and-pass-to-next-team": "Cliquez sur continuer et passez à l'équipe suivante",
+    "game-is-over": "Le jeu est terminé!",
+    round_0: "Manche 1",
+    round_1: "Manche 2",
+    round_2: "Manche 3",
+    round_0_instruction: "description libre",
+    round_1_instruction: "un seul mot",
+    round_2_instruction: "mime",
+    round_end_of: "Fin du",
+    "remaining-words": "Mots restants",
+    winner: "Gagnant",
     scores: "Scores",
   },
 }
@@ -74,7 +98,7 @@ class Game {
     this.currentRound = 0
     this.teams = ["A", "B", "C", "D", "E", "F"].splice(0, howManyTeams)
     const amountWords = 10 + howManyTeams * 10
-    this.words = sample(PALAVRAS, amountWords)
+    this.words = sample(WORDS[lang], amountWords)
 
     this.currentTeamIndex = 0
     this.currentWordIndex = 0
@@ -215,7 +239,7 @@ let timerId = null
 const resetTimer = () => {
   clearInterval(timerId)
   timer = 40
-  timer = 5 // uncomment for testing
+  // timer = 5 // uncomment for testing
 }
 
 resetTimer()
@@ -344,7 +368,7 @@ const updateTimer = () => {
 
 const startTimer = () => {
   updateNotif(
-    `<p>${getTranslated("time-is-up")}</p>
+    `<p>${getTranslated("time-is-up")} ⌛️</p>
      <p class="is-size-6">${getTranslated("click-start-and-pass-to-next-team")}</p>`,
   )
   timerId = setInterval(updateTimer, 1000)
