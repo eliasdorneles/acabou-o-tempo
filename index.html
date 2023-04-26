@@ -14,11 +14,16 @@
             <div id="start-game-dialog">
               <!-- <div id="start&#45;game&#45;dialog" style="display: none"> -->
               <p class="title is-size-4">
-                <span class="is-italic">« Time's Up! »</span>
-                em Português <span class="has-text-primary">🇧🇷</span>
+                <span class="is-italic">Time's Up!</span>
               </p>
               <div class="block">
-                <label class="label" for="how-many-teams">Quantas equipes?</label>
+                <button class="button is-small" onclick="setLanguage('pt')">Português 🇧🇷</button>
+                <button class="button is-small" onclick="setLanguage('en')">English 🇺🇸</button>
+              </div>
+              <div class="block">
+                <label class="label" for="how-many-teams">
+                  <span id="how-many-teams-label">Quantas equipes?</span>
+                </label>
                 <div class="control">
                   <label class="radio">
                     <input type="radio" name="how-many-teams" value="2" checked required />
@@ -40,29 +45,44 @@
               </div>
               <div class="block">
                 <button id="start-game" class="button is-primary" onclick="startGame()">
-                  Começar partida
+                  <span id="start-game-label">Começar partida</span>
                 </button>
               </div>
             </div>
             <div id="game-box" style="display: none">
               <p class="title is-4 is-primary"><span id="round"></span></p>
-              <p id="team-box" class="subtitle is-3">Equipe <span id="current-team">(carregando...)</span></p>
+              <p id="team-box" class="subtitle is-3">
+                <span id="team-label">Equipe</span>
+                <span id="current-team">(⏳️...)</span>
+              </p>
               <div id="times-up" style="display: none">
                 <div id="notif" class="subtitle is-4">...</div>
 
-                <button class="button is-primary" onclick="nextToPlay()">Continuar</button>
+                <button id="continue-btn" class="button is-primary" onclick="nextToPlay()">
+                  <span id="continue-label">Continuar</span>
+                </button>
               </div>
               <div id="get-ready">
-                <p class="subtitle is-6">Clique em começar quando estiver pronto</p>
+                <p class="subtitle is-6">
+                  <span id="click-start-when-ready-label">
+                    Clique em começar quando estiver pronto
+                  </span>
+                </p>
 
-                <button class="button is-primary" onclick="startTimer()">Começar</button>
+                <button class="button is-primary" onclick="startTimer()">
+                  <span id="start-label">Começar</span>
+                </button>
               </div>
               <div id="playing" style="display: none">
-                <p id="word-box" class="title my-6">(carregando...)</p>
+                <p id="word-box" class="title my-6">(⏳️...)</p>
                 <p id="timer" class="title is-4">(0:<span id="timer-seconds"></span>)</p>
                 <div class="level buttons are-large">
-                  <button class="button is-danger" onclick="skipWord()">Passar</button>
-                  <button class="button is-primary" onclick="gotItRight()">Acertou!</button>
+                  <button class="button is-danger" onclick="skipWord()">
+                    <span id="pass-label">Passar</span>
+                  </button>
+                  <button class="button is-primary" onclick="gotItRight()">
+                    <span id="got-it-right-label">Acertou!</span>
+                  </button>
                 </div>
               </div>
             </div>

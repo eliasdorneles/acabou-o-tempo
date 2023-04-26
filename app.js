@@ -1,3 +1,60 @@
+const TRANSLATIONS = {
+  pt: {
+    team: "Equipe",
+    "how-many-teams": "Quantas equipes?",
+    continue: "Continuar",
+    pass: "Passar",
+    "got-it-right": "Acertou!",
+    start: "Começar",
+    "start-game": "Começar partida",
+    "click-start-when-ready": "Clique em começar quando estiver pronto",
+    "last-word-of-round": "Última palavra da fase",
+    "time-is-up": "Acabou o tempo!",
+    "click-start-and-pass-to-next-team": "Clique em continuar e passe para a próxima equipe",
+    "game-is-over": "Fim do jogo!",
+    round_0: "1ª Fase",
+    round_1: "2ª Fase",
+    round_2: "3ª Fase",
+    round_0_instruction: "descrição livre",
+    round_1_instruction: "uma palavra só",
+    round_2_instruction: "mímica",
+    round_end_of: "Fim da",
+    "remaining-words": "Palavras restantes",
+    winner: "Vencedor",
+    scores: "Placar",
+  },
+  en: {
+    team: "Team",
+    "how-many-teams": "How many teams?",
+    continue: "Continue",
+    pass: "Pass",
+    "got-it-right": "Got it right!",
+    start: "Start",
+    "start-game": "Start game",
+    "click-start-when-ready": "Click start when ready",
+    "last-word-of-round": "Last word of the round",
+    "time-is-up": "Time is up!",
+    "click-start-and-pass-to-next-team": "Click start and pass it to the next team",
+    "game-is-over": "Game is over",
+    round_0: "Round 1",
+    round_1: "Round 2",
+    round_2: "Round 3",
+    round_0_instruction: "free description",
+    round_1_instruction: "one word only",
+    round_2_instruction: "charades",
+    round_end_of: "End of",
+    "remaining-words": "Remaining words",
+    winner: "Winner",
+    scores: "Scores",
+  },
+}
+
+let lang = "pt"
+
+const getTranslated = (key) => {
+  return TRANSLATIONS[lang][key]
+}
+
 const sample = (array, size = 1) => {
   // Return a random sample of the given array of size `size`
   const { floor, random } = Math
@@ -22,8 +79,8 @@ class Game {
     this.currentTeamIndex = 0
     this.currentWordIndex = 0
 
-    this.endOfRound = false
-    this.endOfGame = false
+    this.roundIsOver = false
+    this.gameIsOver = false
 
     this.score = [
       new Array(amountWords).fill(null), // each position contains the team name (e.g. "A", "B", ...) in the position of the word
@@ -90,19 +147,19 @@ class Game {
 
   handleEndOfRound() {
     console.log("end of round")
-    this.endOfRound = true
+    this.roundIsOver = true
     this.updateScores()
     if (this.currentRound == 2) {
       console.log("end of game")
-      this.endOfGame = true
+      this.gameIsOver = true
     }
   }
 
   startNextRound() {
-    if (this.endOfGame) {
+    if (this.gameIsOver) {
       console.log("game is finished, gotta start a new one")
     } else {
-      this.endOfRound = false
+      this.roundIsOver = false
       this.currentRound += 1
     }
   }
@@ -149,6 +206,7 @@ const timesUpDialog = document.getElementById("times-up")
 const playingBox = document.getElementById("playing")
 const gameBox = document.getElementById("game-box")
 const currentTeamBox = document.getElementById("team-box")
+const continueBtn = document.getElementById("continue-btn")
 
 let game = undefined
 let timer = 0
@@ -157,7 +215,7 @@ let timerId = null
 const resetTimer = () => {
   clearInterval(timerId)
   timer = 40
-  // timer = 5 // uncomment for testing
+  timer = 5 // uncomment for testing
 }
 
 resetTimer()
@@ -169,25 +227,43 @@ const show = (el, display = "block") => (el.style.display = display)
 const updateNotif = (text) => (document.getElementById("notif").innerHTML = text)
 
 const roundName = (round, short = false) => {
-  switch (round) {
-    case 0:
-      return `1ª fase${short ? "" : ": descrição livre"}`
-    case 1:
-      return `2ª fase${short ? "" : ": uma palavra só"}`
-    case 2:
-      return `3ª fase${short ? "" : ": mímica"}`
-    default:
-      return "Fase desconhecida"
+  if (round > 2) {
+    return "Unknown round"
   }
+  if (short) {
+    return getTranslated(`round_${round}`)
+  }
+  return getTranslated(`round_${round}`) + ": " + getTranslated(`round_${round}_instruction`)
+}
+
+const translateUI = () => {
+  const staticLabels = [
+    "how-many-teams",
+    "team",
+    "continue",
+    "pass",
+    "got-it-right",
+    "start-game",
+    "start",
+    "click-start-when-ready",
+  ]
+  staticLabels.forEach((label) => {
+    document.getElementById(`${label}-label`).innerHTML = getTranslated(label)
+  })
+}
+
+const setLanguage = (newLang) => {
+  lang = newLang
+  translateUI()
 }
 
 const generateHtmlTableOfTeamsAndScoresForCurrentRound = (game) => {
   const roundScores = game.roundScores[game.currentRound]
   let html = "<table class='table is-size-6 mx-6'>"
-  html += "<thead><tr><th colspan='2'>Placar</th></tr></thead>"
+  html += "<thead><tr><th colspan='2'>" + getTranslated("scores") + "</th></tr></thead>"
   html += "<tbody>"
   roundScores.forEach((s) => {
-    html += `<tr><td>Equipe ${s.team}</td><td>${s.points}</td></tr>`
+    html += `<tr><td>${getTranslated("team")} ${s.team}</td><td>${s.points}</td></tr>`
   })
   html += "</tbody>"
   html += "</table>"
@@ -204,25 +280,31 @@ const updateGameUI = () => {
   document.getElementById("round").innerHTML = roundName(game.currentRound)
   document.getElementById("current-team").innerHTML = game.currentTeam()
   const wordBox = document.getElementById("word-box")
-  if (game.endOfRound) {
-    let message = `<p>Fim da ${roundName(game.currentRound, (short = true))}</p>
-      <p class="title is-3">Equipe ${game.currentRoundWinner()} venceu! 👏</p>
+  if (game.roundIsOver) {
+    let message = `<p>${getTranslated("round_end_of")} ${roundName(
+      game.currentRound,
+      (short = true),
+    )}</p>
+      <p class="title is-3">${getTranslated("winner")} ${game.currentRoundWinner()} 👏👏</p>
       ${generateHtmlTableOfTeamsAndScoresForCurrentRound(game)}
       `
-    if (game.endOfGame) {
-      message += "<p>Fim do jogo!</p>"
+    if (game.gameIsOver) {
+      message += `<p>${getTranslated("game-is-over")}!</p>`
     }
     updateNotif(message)
     show(timesUpDialog)
     hide(playingBox)
     hide(currentTeamBox)
+    if (game.gameIsOver) {
+      hide(continueBtn)
+    }
   } else {
     wordBox.innerHTML = `
       <p>${game.currentWord()}</p>
       <p class="is-size-6 has-text-grey mt-2">${
         game.lastWordOfRound()
-          ? "Última palavra da fase atual"
-          : `Palavras restantes: ${game.countRemainingWordsinTheRound()}`
+          ? getTranslated("last-word-of-round")
+          : `${getTranslated("remaining-words")}: ${game.countRemainingWordsinTheRound()}`
       }</p>
       `
   }
@@ -237,10 +319,10 @@ const timerFinished = () => {
 }
 
 const nextToPlay = () => {
-  if (game.endOfRound) {
+  if (game.roundIsOver) {
     resetTimer()
   }
-  if (game.endOfRound && !game.endOfGame) {
+  if (game.roundIsOver && !game.gameIsOver) {
     game.startNextRound()
     show(currentTeamBox)
   }
@@ -262,7 +344,8 @@ const updateTimer = () => {
 
 const startTimer = () => {
   updateNotif(
-    '<p>Acabou o tempo!</p><p class="is-size-6">Clique em continuar e passe para a próxima equipe</p>',
+    `<p>${getTranslated("time-is-up")}</p>
+     <p class="is-size-6">${getTranslated("click-start-and-pass-to-next-team")}</p>`,
   )
   timerId = setInterval(updateTimer, 1000)
   updateGameUI()
