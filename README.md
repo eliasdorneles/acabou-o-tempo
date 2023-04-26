@@ -1,6 +1,11 @@
 # Acabou o Tempo
 
-Uma versão online do jogo [Time's Up](https://en.wikipedia.org/wiki/Time%27s_Up!_%28game%29) em português do Brasil.
+Uma versão online do jogo [Time's Up](https://en.wikipedia.org/wiki/Time%27s_Up!_%28game%29).
+
+Implementei este jogo pois queria jogar com minha família no Brasil e não existia nenhuma versão em português.
+
+Mais tarde, adicionei o suporte a múltiplos idiomas.
+
 
 ## Como jogar
 
